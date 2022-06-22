@@ -1,15 +1,31 @@
-import { ReactNode } from "react";
+import { FontIcon } from "@fluentui/react";
+import { ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Stepper } from "../stepper/stepper";
 import { Title } from "../text/title";
 
 type Props = {
     hidden: boolean;
     title: string;
+    onClose?: () => void;
     children?: ReactNode;
 }
 
 export const Dialog = (props: Props) => {
+    const [isHidden, setIsHidden] = useState(props.hidden);
+
+    useEffect(() => {
+        setIsHidden(props.hidden);
+    }, [props.hidden]);
+
+    const onCloseClick = () => {
+        setIsHidden(true);
+        props.onClose?.();
+    }
+
+    if (isHidden) {
+        return <></>;
+    }
+
     return (
         <Overlay>
             <Container>
@@ -19,24 +35,11 @@ export const Dialog = (props: Props) => {
                             props.title
                         }
                     </Title>
-                    close
+                    <CloseIcon onClick={onCloseClick} iconName="ChromeClose" />
                 </Header>
-                <Stepper
-                    steps={[
-                        {
-                            component: <div>test</div>,
-                            id: '1'
-                        },
-                        {
-                            component: <div>test2</div>,
-                            id: '2'
-                        },
-                        {
-                            component: <div>test3</div>,
-                            id: '3'
-                        }
-                    ]}
-                />
+                {
+                    props.children
+                }
             </Container>
         </Overlay>
     );
@@ -58,7 +61,7 @@ const Container = styled.div`
     border-radius: 10px;
     box-shadow: 0px 0px 22px 3px rgb(125 125 125 / 27%);
     padding: 2rem;
-    width: 40vw;
+    width: 50vw;
     background-color: white;
 
     margin: 50px;
@@ -69,4 +72,11 @@ const Header = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+`;
+
+const CloseIcon = styled(FontIcon)`
+    font-size: .7rem;
+    :hover {
+        cursor: pointer;
+    }
 `;

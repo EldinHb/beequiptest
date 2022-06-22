@@ -1,18 +1,27 @@
+import { FontIcon } from "@fluentui/react";
 import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
 
 type Props = {
     children?: string | never[];
     className?: string;
+    svgIcon?: string;
     buttonProps?: ButtonHTMLAttributes<HTMLButtonElement>;
 }
 
 export const Button = (props: Props) => {
     return (
         <StyledButton {...props.buttonProps} className={props.className}>
-            {
-                props.children
-            }
+            <ContentContainer>
+                {
+                    props.svgIcon && <Image
+                        iconName={props.svgIcon}
+                    />
+                }
+                {
+                    props.children
+                }
+            </ContentContainer>
         </StyledButton>
     );
 }
@@ -30,4 +39,17 @@ const StyledButton = styled.button`
     :hover {
         cursor: pointer;
     }
+`;
+
+const ContentContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+`;
+
+const Image = styled(FontIcon)`
+    font-size: .8rem;
+    font-weight: bold;
+    color: black;
 `;

@@ -6,7 +6,7 @@ export type LeaseType = 'financial' | 'operational' | 'saleAndLeaseBack';
 export type ApplicationData = {
     brand: string;
     model: string;
-    year: Date;
+    year: string;
     condition: Condition;
     value: string;
     leaseType: LeaseType;
@@ -16,17 +16,26 @@ export type ApplicationData = {
 
 type ApplicationContextValue = {
     data: ApplicationData;
+    shadowData: ApplicationData;
     setData: (data: ApplicationData) => void;
+    saveData: () => void;
 }
 const applicationContext = createContext<ApplicationContextValue | undefined>(undefined);
 
 export const ApplicationContextProvider = ({ children, value }: { children?: ReactNode, value: ApplicationData }) => {
     const [data, setData] = useState(value);
+    const [shadowData, setShadowData] = useState(value);
+
+    const onSave = () => {
+        setData(shadowData);
+    };
 
     return (
         <applicationContext.Provider value={{
             data,
-            setData
+            shadowData,
+            setData: setShadowData,
+            saveData: onSave
         }}>
             {
                 children

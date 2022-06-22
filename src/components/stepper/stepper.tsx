@@ -12,6 +12,7 @@ export type StepperStep = {
 type Props = {
     children?: ReactNode;
     steps: StepperStep[];
+    onSave: () => void;
 }
 
 export const Stepper = (props: Props) => {
@@ -28,7 +29,7 @@ export const Stepper = (props: Props) => {
         <div>
             <StepperContainer>
                 {
-                    props.steps.map((_, i) => <Step key={i} state={currentPage - 1 === i ? 'active' : currentPage - 1 > i ? 'completed' : 'none'} />)
+                    props.steps.map((s, i) => <Step key={s.id} state={currentPage - 1 === i ? 'active' : currentPage - 1 > i ? 'completed' : 'none'} />)
                 }
             </StepperContainer>
             <ContentContainer>
@@ -38,14 +39,18 @@ export const Stepper = (props: Props) => {
             </ContentContainer>
             <FooterContainer>
                 {
-                    currentPage > 0 && currentPage !== 1 && currentPage !== props.steps.length && <TextButton buttonProps={{
-                        onClick: onPrev
-                    }}>
+                    currentPage > 0 && currentPage !== 1 && currentPage !== props.steps.length && <TextButton
+                        svgIcon="ChevronLeftMed"
+                        buttonProps={{
+                            onClick: onPrev
+                        }}>
                         Vorige
                     </TextButton>
                 }
                 {
-                    currentPage === props.steps.length && <StyledButton>
+                    currentPage === props.steps.length && <StyledButton buttonProps={{
+                        onClick: props.onSave
+                    }}>
                         Opslaan
                     </StyledButton>
                 }
